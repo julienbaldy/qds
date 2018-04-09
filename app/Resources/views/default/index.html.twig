@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="row">
+    <div class="box-form col-md-12">
+        <form class="col-md-12">
+
+            <div class="box-form-content col-md-12">
+                {% for key,val in arrayStep %}
+
+                    {% if loop.first %}
+                        {% set etat = 'active' %}     
+                    {% else %} 
+                        {% set etat = 'inactive' %}
+                    {% endif %}
+
+                    {% for key,val in val %}
+                    </br>
+                        {% if loop.first %} 
+                            <div class="box-form-{{etat}}">
+                            <h2>{{ val }}</h2>      
+                        {% else %}    
+                            <h3>{{ val.blockTitle }}</h3>
+                            {% for key,value in val %}
+                                {% if value is iterable %}
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-5 col-sm-5">
+                                                <label>{{ value.titleQuestion }}</label>
+                                            </div>
+
+                                            {% if value.typeQuestion == 'STAR' %} 
+                                                <div class="box-rating col-md-7 col-sm-7">
+                                                      <fieldset class="{{ value.responseIDQuestion }}-rating rating">
+                                                        <input type="radio" id="{{ value.responseIDQuestion }}-star5" name="{{ value.responseIDQuestion }}-rating" value="5" /><label data-before="" class = "full" for="{{ value.responseIDQuestion }}-star5"></label>
+                                                        <input type="radio" id="{{ value.responseIDQuestion }}-star4" name="{{ value.responseIDQuestion }}-rating" value="4" /><label class = "full" for="{{ value.responseIDQuestion }}-star4"></label>
+                                                        <input type="radio" id="{{ value.responseIDQuestion }}-star3" name="{{ value.responseIDQuestion }}-rating" value="3" /><label class = "full" for="{{ value.responseIDQuestion }}-star3"></label>
+                                                        <input type="radio" id="{{ value.responseIDQuestion }}-star2" name="{{ value.responseIDQuestion }}-rating" value="2" /><label class = "full" for="{{ value.responseIDQuestion }}-star2"></label>
+                                                        <input type="radio" id="{{ value.responseIDQuestion }}-star1" name="{{ value.responseIDQuestion }}-rating" value="1" /><label class = "full" for="{{ value.responseIDQuestion }}-star1"></label>
+                                                    </fieldset>
+                                                    <div id="messageSF">
+                                                        <span class="first-sf">Choisissez votre note</span>
+                                                        <span>Très insatisfait</span>
+                                                        <span>Insatisfait</span>
+                                                        <span>Peu satisfait</span>
+                                                        <span>Satisfait</span>
+                                                        <span>Très satisfait</span>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if value.typeQuestion == 'TEXT' %} 
+                                                <div class="box-rating col-md-12 col-sm-12">
+                                                    <textarea class="question-text" placeholder="Votre avis ici..." data-idresponse="{{ value.responseIDQuestion }}" ></textarea>
+                                                </div>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}   
+                        {% endif %}
+                        {% if loop.last %} 
+                            </div>     
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            
+            <div class="box-nav">
+                <input type="button" value="Passer à l'étape suivante" class="btn-active" id="btn-suivant"/>
+                <input type="button" value="Valider" id="btn-valider" class="btn-inactive"/>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

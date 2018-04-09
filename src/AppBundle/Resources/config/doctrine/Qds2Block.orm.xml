@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Qds2Block" table="qds2_block">
+    <indexes>
+      <index name="FK_block_step" columns="idStep"/>
+    </indexes>
+    <id name="idblock" type="integer" column="idBlock">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="idstep" type="integer" column="idStep" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="blocktitle" type="string" column="blockTitle" length="100" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="blockmultiple" type="integer" column="blockMultiple" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="blockorder" type="integer" column="blockOrder" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

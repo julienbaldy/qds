@@ -1,0 +1,5 @@
+app/config/
+bin/
+tests/
+var/
+vendor/
