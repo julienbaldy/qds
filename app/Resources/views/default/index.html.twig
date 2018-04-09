@@ -26,11 +26,15 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="col-md-5 col-sm-5">
-                                                <label>{{ value.titleQuestion }}</label>
+                                                {% if value.titleQuestion != "[N/A]" %}
+                                                    <label>{{ value.titleQuestion }} - {{ value.typeQuestion }}</label>
+                                                {% else %}
+                                                    <label>ELSE {{ value.titleQuestion }} - {{ value.typeQuestion }}</label>
+                                                {% endif %}
                                             </div>
 
                                             {% if value.typeQuestion == 'STAR' %} 
-                                                <div class="box-rating col-md-7 col-sm-7">
+                                                <div class="box-rating col-md-6 col-sm-6">
                                                       <fieldset class="{{ value.responseIDQuestion }}-rating rating">
                                                         <input type="radio" id="{{ value.responseIDQuestion }}-star5" name="{{ value.responseIDQuestion }}-rating" value="5" /><label data-before="" class = "full" for="{{ value.responseIDQuestion }}-star5"></label>
                                                         <input type="radio" id="{{ value.responseIDQuestion }}-star4" name="{{ value.responseIDQuestion }}-rating" value="4" /><label class = "full" for="{{ value.responseIDQuestion }}-star4"></label>
@@ -52,6 +56,15 @@
                                             {% if value.typeQuestion == 'TEXT' %} 
                                                 <div class="box-rating col-md-12 col-sm-12">
                                                     <textarea class="question-text" placeholder="Votre avis ici..." data-idresponse="{{ value.responseIDQuestion }}" ></textarea>
+                                                </div>
+                                            {% endif %}
+
+
+                                            {% if value.typeQuestion == 'QCM2' %} 
+                                                <div class="box-qcm row">
+                                                    {% for key,qcm in value.choiceQuestion %}
+                                                       <div class="col-md-6 col-sm-6 col-xs-6">{{ qcm }}<input type="radio" name="radio-qcm-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/></div>
+                                                    {% endfor %} 
                                                 </div>
                                             {% endif %}
 

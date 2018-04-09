@@ -14,7 +14,10 @@ $(document).ready(function()
     //je recupe la div qui contient les message à afficher
     var divMess = box.find("div");
     var isActive = false;
-    var count = 0;
+    var count = -1;
+
+    _whatAboutFirstStarMessage(divMess , "hide");
+
     divMess.children('span').each(function () {
       if($(this).hasClass("active"))
         {
@@ -43,7 +46,7 @@ $(document).ready(function()
     var radioID = $(this).attr('for');
     var radioBtn = $("#"+radioID);
     var satisfaction = radioBtn.val() - 1;
-    var count = 0;
+    var count = -1;
     divMess.children('span').each(function () {
       if(count == satisfaction)
       {
@@ -51,8 +54,36 @@ $(document).ready(function()
       }
       count++;
     });
+
+    _whatAboutFirstStarMessage(divMess, "visible");
   
   });
+
+  //Quoi faire du premier message "choisissez votre"
+  //remplacer les name des inputs en dessous pour checker les bon label
+  function _whatAboutFirstStarMessage(divMess, option)
+  {
+    if(option == "hide")
+    {
+      divMess.children('span').each(function () {
+        if ($("input[name='R01-rating']").is(":not(:checked)")) {
+          if ($(this).hasClass( "first-sf" )){
+            $(this).css( "display", "none" );
+          }
+        }
+      });
+    }
+    else if (option == "visible")
+    {
+      divMess.children('span').each(function () {
+        if ($("input[name='R01-rating']").is(":not(:checked)")) {
+          if ($(this).hasClass( "first-sf" )){
+            $(this).css( "display", "block" );
+          }
+        }
+      });
+    }
+  }
   
   $("label").on("click",function(){
     //je recupe l'id radio
@@ -67,18 +98,33 @@ $(document).ready(function()
     var divMess = box.find("div");
     var count = 0;
     divMess.children('span').each(function () {
-      if($(this).hasClass("active"))
+
+      if ($(this).hasClass( "first-sf" )){
+          $(this).css( "display", "none" );
+      }
+      else
+      {
+        if($(this).hasClass("active"))
         {
           $(this).removeClass("active");
         }
+      }
+
+      
     });
     divMess.children('span').each(function () {
-      if(count == satisfaction)
-        {
-          $(this).addClass("active");
-          return false;
-        }
-      count++;
+      if ($(this).hasClass( "first-sf" )){
+          $(this).css( "display", "none" );
+      }
+      else
+      {
+        if(count == satisfaction)
+          {
+            $(this).addClass("active");
+            return false;
+          }
+        count++;
+      }
     });
     
   });
@@ -111,8 +157,6 @@ $(document).ready(function()
 			}
 
 			$(document).scrollTop( $(".box-form").offset().top );  
-
-
-        });
+      });
 	});
 });

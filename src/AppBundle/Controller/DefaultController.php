@@ -146,6 +146,12 @@ class DefaultController extends Controller
                 $arrayQuestion['visibleQuestion']       = $visibleQuestion;
                 $arrayQuestion['responseIDQuestion']    = $responseIDQuestion;
 
+
+                if($typeQuestion == "QCM2")
+                {
+                    $arrayQuestion['choiceQuestion']    = json_decode($choiceQuestion, true);
+                }
+
                 //je met le tableau de question dans le bloc
                 $arrayBlock[$idQuestion] = $arrayQuestion;
 
