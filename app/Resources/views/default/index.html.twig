@@ -68,6 +68,33 @@
                                                 </div>
                                             {% endif %}
 
+                                            {% if value.typeQuestion == 'YESNO' %} 
+                                                <div class="box-yesno row">
+                                                       <div class="col-md-6 col-sm-6 col-xs-6">
+                                                        <li>Oui <input type="radio" value="1" name="radio-yesno-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/></li>
+                                                        <li>Non <input type="radio" value="0" name="radio-yesno-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/></li>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if value.typeQuestion == '0to10' %} 
+                                                <div class="box-0to10 row">
+                                                       <div class="col-md-10 col-sm-10 col-xs-10">
+                                                        <input type="radio" value="0" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="1" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="2" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="3" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="4" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="5" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="6" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="7" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="8" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="9" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="10" name="radio-0to10-{{ value.responseIDQuestion }}" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
                                         </div>
                                     </div>
                                 {% endif %}

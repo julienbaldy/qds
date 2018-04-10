@@ -9,6 +9,8 @@ use AppBundle\Entity\Qds2Pattern;
 use AppBundle\Entity\Qds2Question;
 use AppBundle\Entity\Qds2Step;
 use AppBundle\Entity\Qds2Block;
+use \Datetime;
+use Symfony\Component\HttpFoundation\Session\Session;
 /*use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
@@ -33,6 +35,7 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+        date_default_timezone_set('Europe/Paris');
 /*        if(!isset($session))
         {
             $session = $request->getSession();
@@ -50,6 +53,10 @@ class DefaultController extends Controller
         $form = $formFactory->createBuilder()
             ->add('QSD', TextType::class)
             ->getForm();*/
+
+        $this->init();   
+        $session = $this->get('session');
+        var_dump($session->all());
 
         $patternRepo    = $this->getDoctrine()->getRepository(Qds2Pattern::class);
         $stepRepo       = $this->getDoctrine()->getRepository(Qds2Step::class);
@@ -76,6 +83,20 @@ class DefaultController extends Controller
             array('arrayStep' => $arrayStep));
     }
 
+    //Init la session
+    public function init()
+    {
+        if(!$this->container->get('session')->isStarted())
+        {
+            $session = new Session();
+            $session->start();
+            $session->set('current_date', date("Y-m-d H:i:s"));
+        }else
+        {
+            $session = $this->get('session');
+            $session->set('current_date', date("Y-m-d H:i:s"));
+        }
+    }
 
     /*
     *   Function _getStep qui permet de récupérer sous form d'array les données d'un type de questionnaire (avant départ, pendant voyage, etc...)
