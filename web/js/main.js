@@ -1,7 +1,7 @@
 $(document).ready(function() 
 { 
 
-  $(".full").hover(function(){
+  $(".full").hover(function(){ //fonction hover
     $(this).addClass('starFull');
     //je recupe l'id radio
     var radioID = $(this).attr('for');
@@ -36,7 +36,7 @@ $(document).ready(function()
         });
       }
     
-  }, function(){
+  }, function(){ //fonction out
     
     $(this).removeClass('starFull');
     //je recupe la box parente
@@ -76,10 +76,20 @@ $(document).ready(function()
     else if (option == "visible")
     {
       divMess.children('span').each(function () {
-        if ($("input[name='R01-rating']").is(":not(:checked)")) {
-          if ($(this).hasClass( "first-sf" )){
-            $(this).css( "display", "block" );
-          }
+        var objSpan = $(this);
+        divBoxRating = divMess.parent();
+        radio = divBoxRating.find("input");
+
+        if ($(this).hasClass( "first-sf" )){
+
+             divBoxRating.find("input[type=radio]").each(function () {
+              if($(this).is(":checked"))
+              {
+                objSpan.css( "display", "none" );
+                return false;
+              }
+              objSpan.css( "display", "block" );
+            });
         }
       });
     }
