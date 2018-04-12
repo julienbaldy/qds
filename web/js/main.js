@@ -66,10 +66,16 @@ $(document).ready(function()
     if(option == "hide")
     {
       divMess.children('span').each(function () {
-        if ($("input[name='R01-rating']").is(":not(:checked)")) {
-          if ($(this).hasClass( "first-sf" )){
-            $(this).css( "display", "none" );
-          }
+        var objSpan = $(this);
+        divBoxRating = divMess.parent();
+        if ($(this).hasClass( "first-sf" )){
+          divBoxRating.find("input[type=radio]").each(function () {
+            if($(this).is(":not(:checked)"))
+            {
+              objSpan.css( "display", "none" );
+              return false;
+            }
+          });
         }
       });
     }
@@ -78,7 +84,6 @@ $(document).ready(function()
       divMess.children('span').each(function () {
         var objSpan = $(this);
         divBoxRating = divMess.parent();
-        radio = divBoxRating.find("input");
 
         if ($(this).hasClass( "first-sf" )){
 
