@@ -67,6 +67,8 @@ class DefaultController extends Controller
         $arrayStep      = array();
         $steps          = $stepRepo->findBy(array('idpattern' => $pattern->getIdpattern()));
 
+        $session->set('qdspattern', $pattern);
+
         //récupérer les step automatiquement suivant le type de questionnaire
         foreach ($steps as $value) {
             $step = $this->_getStep($pattern , $value->getSteporder());
@@ -87,16 +89,16 @@ class DefaultController extends Controller
     //Init la session
     public function init()
     {
+        $guidesTMP = '{"2444":"Sarah SCAGLIONE","1989":"Julien BALDY"}';
         if(!$this->container->get('session')->isStarted())
         {
             $session = new Session();
             $session->start();
-            $session->set('current_date', date("Y-m-d H:i:s"));
-        }else
-        {
-            $session = $this->get('session');
-            $session->set('current_date', date("Y-m-d H:i:s"));
         }
+
+        $session = $this->get('session');
+        $session->set('current_date', date("Y-m-d H:i:s"));
+        $session->set('guidesTMP', $guidesTMP);
     }
 
     /*
@@ -108,6 +110,8 @@ class DefaultController extends Controller
     */
     public function _getStep($pattern , $stepOrder)
     {
+        $session = $this->get('session');
+
         //variable
         $arrayBlockMultiple     = array();
         $arrayIncrementResponse = array();
@@ -125,6 +129,8 @@ class DefaultController extends Controller
         $step                   = $stepRepo->findOneBy(array('idpattern' => $idPattern, 'steporder' => $stepOrder));
         $idStep                 = $step->getIdstep();
         $titleStep              = $step->getSteptitle();
+        $guidesTMP              = json_decode($session->get('guidesTMP'));
+
         //je garde le titre du step de coté
         array_push($arrayFinal, $titleStep);
 
@@ -132,7 +138,8 @@ class DefaultController extends Controller
         $blocks = $blockRepo->findBy(array('idstep' => $idStep), array('blockorder' => 'ASC'));
 
         //pour tous les blocks
-        foreach ($blocks as $block) {
+        foreach ($blocks as $block) 
+        {
             $arrayBlock                     = array();
             $idBlock                        = $block->getIdblock();
             $blockTitle                     = $block->getBlocktitle();
@@ -144,100 +151,166 @@ class DefaultController extends Controller
             $arrayBlock['blockMultiple']    = $blockMultiple;
             $arrayBlock['blockOrder']       = $blockOrder;
 
-            //Si c'est un block multiple je le retiens...
-            if($blockMultiple > 1){
-                if(!array_key_exists($idBlock, $arrayBlockMultiple)){
-                    $arrayBlockMultiple = array($idBlock => 1, "Max" => $blockMultiple);
-                }
-            }
-
             //je cherche les questions du bloc
             $questions = $questionRepo->findBy(array('idblock' => $idBlock));
 
-            foreach ($questions as $question) {
-                $arrayQuestion                          = array();
-                $idQuestion                             = $question->getIdquestion();
-                $headerQuestion                         = $question->getQuestionheader();
-                $titleQuestion                          = $question->getQuestiontitle();
-                $typeQuestion                           = $question->getQuestiontype();
-                $choiceQuestion                         = $question->getQuestionchoice();
-                $mandatoryQuestion                      = $question->getQuestionmandatory();
-                $orderQuestion                          = $question->getQuestionorder();
-                $visibleQuestion                        = $question->getQuestionvisible();
-                $responseIDQuestion                     = $question->getResponseid();
+            if($blockMultiple > 1)
+            {
+                //condition pour block multiple, 7 est à remplacer en dynamic
+                if($idBlock == 7)
+                {
+                    $nb = 1;
 
-                $arrayQuestion['idQuestion']            = $idQuestion;
-                $arrayQuestion['headerQuestion']        = $headerQuestion;
-                $arrayQuestion['titleQuestion']         = $titleQuestion;
-                $arrayQuestion['typeQuestion']          = $typeQuestion;
-                $arrayQuestion['choiceQuestion']        = $choiceQuestion;
-                $arrayQuestion['mandatoryQuestion']     = $mandatoryQuestion;
-                $arrayQuestion['orderQuestion']         = $orderQuestion;
-                $arrayQuestion['visibleQuestion']       = $visibleQuestion;
-                $arrayQuestion['responseIDQuestion']    = $responseIDQuestion;
+                    //pour chaque guide
+                    foreach ($guidesTMP as $key => $value) {
+                        $blockTitleTMP = $blockTitle;
+                        $blockTitleTMP = str_replace("[nomTourLeader]", $value, $blockTitle);
+                        $arrayBlock['blockTitle'] = $blockTitleTMP;
+                        $arrayBlock['guideID']    = $key;
 
-                //gestion des multiples reponses par bloc de questions
-                if(strpos($responseIDQuestion, 'n') !== false){
-                    $splitId = explode('_', $responseIDQuestion);
-                    $idReponse = $splitId[0];
-                    if(!array_key_exists($idReponse, $arrayIncrementResponse))
-                    {
-                        $arrayIncrementResponse[$idReponse] = 1;
-                        $arrayQuestion['responseIDQuestion'] = $idReponse . "_" . 1;
-                        //array_push($arrayIncrementResponse, array($idReponse => 1));
-                    }else
-                    {
-                        $arrayIncrementResponse[$idReponse] += 1;
-                        $arrayQuestion['responseIDQuestion'] = $idReponse . "_" . $arrayIncrementResponse[$idReponse];
+                        foreach ($questions as $question) {
+
+                            $arrayQuestion                          = array();
+                            $idQuestion                             = $question->getIdquestion();
+                            $headerQuestion                         = $question->getQuestionheader();
+                            $titleQuestion                          = $question->getQuestiontitle();
+                            $typeQuestion                           = $question->getQuestiontype();
+                            $choiceQuestion                         = $question->getQuestionchoice();
+                            $mandatoryQuestion                      = $question->getQuestionmandatory();
+                            $orderQuestion                          = $question->getQuestionorder();
+                            $visibleQuestion                        = $question->getQuestionvisible();
+                            $responseIDQuestion                     = $question->getResponseid();
+
+                            $arrayQuestion['idQuestion']            = $idQuestion;
+                            $arrayQuestion['headerQuestion']        = $headerQuestion;
+                            $arrayQuestion['titleQuestion']         = $titleQuestion;
+                            $arrayQuestion['typeQuestion']          = $typeQuestion;
+                            $arrayQuestion['choiceQuestion']        = $choiceQuestion;
+                            $arrayQuestion['mandatoryQuestion']     = $mandatoryQuestion;
+                            $arrayQuestion['orderQuestion']         = $orderQuestion;
+                            $arrayQuestion['visibleQuestion']       = $visibleQuestion;
+
+                            $splitId = explode('_', $responseIDQuestion);
+                            $idReponse = $splitId[0];
+
+                            $arrayQuestion['responseIDQuestion']    = $idReponse . "_" . $nb;
+                            $arrayBlock[$idQuestion]    = $arrayQuestion;
+                        }
+                        $nb = $nb + 1;
+                        array_push($arrayFinal, $arrayBlock);
                     }
                 }
-
-
-
-                if($typeQuestion == "QCM2")
-                {
-                    $arrayQuestion['choiceQuestion']    = json_decode($choiceQuestion, true);
-                }
-                if($typeQuestion == "LIST")
-                {
-                    //lancer la requête 
-                }
-
-
-                //je met le tableau de question dans le bloc
-                $arrayBlock[$idQuestion] = $arrayQuestion;
-
             }
-            //je push le bloc dans le tableau final
-            array_push($arrayFinal, $arrayBlock);
+            else
+            {
+                foreach ($questions as $question) {
+                    $arrayQuestion                          = array();
+                    $idQuestion                             = $question->getIdquestion();
+                    $headerQuestion                         = $question->getQuestionheader();
+                    $titleQuestion                          = $question->getQuestiontitle();
+                    $typeQuestion                           = $question->getQuestiontype();
+                    $choiceQuestion                         = $question->getQuestionchoice();
+                    $mandatoryQuestion                      = $question->getQuestionmandatory();
+                    $orderQuestion                          = $question->getQuestionorder();
+                    $visibleQuestion                        = $question->getQuestionvisible();
+                    $responseIDQuestion                     = $question->getResponseid();
+
+                    $arrayQuestion['idQuestion']            = $idQuestion;
+                    $arrayQuestion['headerQuestion']        = $headerQuestion;
+                    $arrayQuestion['titleQuestion']         = $titleQuestion;
+                    $arrayQuestion['typeQuestion']          = $typeQuestion;
+                    $arrayQuestion['choiceQuestion']        = $choiceQuestion;
+                    $arrayQuestion['mandatoryQuestion']     = $mandatoryQuestion;
+                    $arrayQuestion['orderQuestion']         = $orderQuestion;
+                    $arrayQuestion['visibleQuestion']       = $visibleQuestion;
+                    $arrayQuestion['responseIDQuestion']    = $responseIDQuestion;
+
+                    if($typeQuestion == "QCM2")
+                    {
+                        $arrayQuestion['choiceQuestion']    = json_decode($choiceQuestion, true);
+                    }
+                    if($typeQuestion == "LIST")
+                    {
+                        //lancer la requête 
+                    }
+
+                    $arrayBlock[$idQuestion] = $arrayQuestion;
+                }
+
+                //je push le bloc dans le tableau final
+                array_push($arrayFinal, $arrayBlock);
+            }
         }
         return $arrayFinal;
     }
 
 
+    //function de sauvegarde du qds, récupère tous les requêtes http post
+    //et ajoute chaque réponse en base
     public function saveFormAction(Request $request)
     {
         try {
 
             $em             = $this->getDoctrine()->getManager();
-            $form           = $request->request->all();
-            $qdsResponse    = $this->getDoctrine()->getRepository(Qds2::class);
+            //$qdsResponse    = $this->getDoctrine()->getRepository(Qds2::class);
             $oQds           = new Qds2();
+            $date           = new \DateTime();
 
+            $numpassTMP     = "TESTNUMPASS0193";
+            $numdosTMP      = "TESTNUMDOS98465";
+            $idpackdateTMP  = "132";
+            $form           = $request->request->all();
 
+            $oQds->setDtcreate($date);
+            $oQds->setNumPas($numpassTMP); 
+            $oQds->setNumDos($numdosTMP);
+            $oQds->setIdPackDates($idpackdateTMP);
+
+            //si y'a du POST
             if ($request->getMethod() == 'POST') {
+                //pour tous les valeurs récupe 
                 foreach ($form as $key => $value) {
+
+                    //j'explode la key au niveau des trois underscores
                     $listValue = explode("___", $key);
+                    //je récupe que l'id reponse
                     $responseID = $listValue[0];
-                    $functionName = "set".$responseID;
-                        var_dump($responseID);
-                        echo "</br>";
-                    if(method_exists ($oQds,$functionName)) {
-                    }else
-                    {
+                    
+                    //si c'est un id guide
+                    if(strpos($responseID, 'id_tl') !== false){
+                        $responseID = str_replace('_', '', $listValue[0]);
                     }
 
+                    //je prefix avec "set"
+                    $functionName = "set".$responseID;
+                    //je regarde si la methode exist dans ma classe entity
+                    if(method_exists($oQds,$functionName)) 
+                    {
+                         var_dump($functionName);
+                        //elle existe alors je l'utilise pour setter la value
+                        $oQds->$functionName($value); 
+                        $em->persist($oQds);
+                    }
+                    else
+                    {   
+                        //sinon si la methode n'existe pas, je regarde si elle contient un underscore our les RXX_N
+                        if(strpos($functionName, '_') !== false)
+                        {
+                            //je l'explode
+                            $splitId = explode('_', $functionName);
+                            //et je concatène pour ne plus avoir l'underscore mais avoir le nom de la methode
+                            $functionName = $splitId[0] . $splitId[1];
+                            if(method_exists($oQds,$functionName)) 
+                            {
+                                $oQds->$functionName($value);
+                                $em->persist($oQds);
+                            }
+
+                        }
+                    }
                 }
+                $em->flush();
+                $em->clear();
             }
 
             return new Response("Success");

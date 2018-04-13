@@ -21,9 +21,14 @@
                     </br>
                         {% if loop.first %} 
                             <div class="box-form-{{etat}}">
-                            <h2>{{ val }}</h2>      
+                            <h2>{{ val }}</h2>  
+                            {% set nb = 1 %}      
                         {% else %}    
                             <h3>{{ val.blockTitle }}</h3>
+                            {% if val.guideID is defined %}
+                                <input type="hidden" value="{{ val.guideID }}" name="id_tl_{{ nb }}___guideID" id="{{ val.idBlock }}"/>
+                                {% set nb = nb + 1 %} 
+                            {% endif %}
                             {% for key,value in val %}
                                 {% if value is iterable %}
                                     <div class="row">
