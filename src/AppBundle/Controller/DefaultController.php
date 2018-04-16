@@ -80,9 +80,8 @@ class DefaultController extends Controller
         $stepThree      = $this->_getStep($pattern , 3); //APRES VOYAGE
         $stepFour       = $this->_getStep($pattern , 4); //REMERCIEMNET*/
 
-
         //A changer par la suite, avoir un template-qds.html.twig
-        return $this->render('default/index.html.twig', 
+        return $this->render('@App/qds/qds-nord.html.twig', 
             array('arrayStep' => $arrayStep));
     }
 

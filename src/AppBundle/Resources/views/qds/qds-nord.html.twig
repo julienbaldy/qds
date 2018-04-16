@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="row">
+    <div class="box-form col-md-12">
+        <form class="col-md-12" id="form-qds" method="POST" action="{{path('saveForm')}}">
+
+            <div class="box-form-content col-md-12">
+                {% for key,val in arrayStep %}
+
+                    {% if loop.first %}
+                        {% set etat = 'active' %}     
+                    {% else %} 
+                        {% set etat = 'inactive' %}
+                    {% endif %}
+
+                    {% for key,val in val %}
+                    </br>
+                        {% if loop.first %} 
+                            <div class="box-form-{{etat}}">
+                            <h2>{{ val }}</h2>  
+                            {% set nb = 1 %}      
+                        {% else %}    
+                            <h3>{{ val.blockTitle }}</h3>
+                            {% if val.guideID is defined %}
+                                <input type="hidden" value="{{ val.guideID }}" name="id_tl_{{ nb }}___guideID" id="{{ val.idBlock }}"/>
+                                {% set nb = nb + 1 %} 
+                            {% endif %}
+                            {% for key,value in val %}
+                                {% if value is iterable %}
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-5 col-sm-5">
+                                                {% if value.titleQuestion != "[N/A]" %}
+                                                    <label>{{ value.titleQuestion }} - ID Q {{ value.idQuestion }} - ID R {{ value.responseIDQuestion }}</label>
+                                                {% else %}
+                                                    <label>ELSE {{ value.titleQuestion }} - {{ value.idQuestion }}</label>
+                                                {% endif %}
+                                            </div>
+
+                                            {% if value.typeQuestion == 'STAR' %} 
+                                                <div class="box-rating col-md-6 col-sm-6">
+                                                      <fieldset class="{{ value.responseIDQuestion }}___rating rating">
+                                                        <input type="radio" id="{{ value.responseIDQuestion }}-star5" name="{{ value.responseIDQuestion }}___rating" value="5" /><label data-before="" class = "full" for="{{ value.responseIDQuestion }}-star5"></label>
+                                                        <input type="radio" id="{{ value.responseIDQuestion }}-star4" name="{{ value.responseIDQuestion }}___rating" value="4" /><label class = "full" for="{{ value.responseIDQuestion }}-star4"></label>
+                                                        <input type="radio" id="{{ value.responseIDQuestion }}-star3" name="{{ value.responseIDQuestion }}___rating" value="3" /><label class = "full" for="{{ value.responseIDQuestion }}-star3"></label>
+                                                        <input type="radio" id="{{ value.responseIDQuestion }}-star2" name="{{ value.responseIDQuestion }}___rating" value="2" /><label class = "full" for="{{ value.responseIDQuestion }}-star2"></label>
+                                                        <input type="radio" id="{{ value.responseIDQuestion }}-star1" name="{{ value.responseIDQuestion }}___rating" value="1" /><label class = "full" for="{{ value.responseIDQuestion }}-star1"></label>
+                                                    </fieldset>
+                                                    <div id="messageSF">
+                                                        <span class="first-sf">Choisissez votre note</span>
+                                                        <span>pas du tout satisfait</span>
+                                                        <span>pas satisfait</span>
+                                                        <span>peu satisfait</span>
+                                                        <span>satisfait</span>
+                                                        <span>Très satisfait</span>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if value.typeQuestion == 'TEXT' %} 
+                                                <div class="box-rating col-md-12 col-sm-12">
+                                                    <textarea class="question-text" placeholder="Votre avis ici..." name="{{ value.responseIDQuestion }}___text" data-idresponse="{{ value.responseIDQuestion }}" ></textarea>
+                                                </div>
+                                            {% endif %}
+
+
+                                            {% if value.typeQuestion == 'QCM2' %} 
+                                                <div class="box-qcm row">
+                                                    {% for key,qcm in value.choiceQuestion %}
+                                                       <div class="col-md-6 col-sm-6 col-xs-6">{{ qcm }}<input type="radio" name="{{ value.responseIDQuestion }}___qcm" data-idresponse="{{ value.responseIDQuestion }}"/></div>
+                                                    {% endfor %} 
+                                                </div>
+                                            {% endif %}
+
+                                            {% if value.typeQuestion == 'YESNO' %} 
+                                                <div class="box-yesno row">
+                                                       <div class="col-md-6 col-sm-6 col-xs-6">
+                                                        <li>Oui <input type="radio" value="1" name="{{ value.responseIDQuestion }}___yesno" data-idresponse="{{ value.responseIDQuestion }}"/></li>
+                                                        <li>Non <input type="radio" value="0" name="{{ value.responseIDQuestion }}___yesno-" data-idresponse="{{ value.responseIDQuestion }}"/></li>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+                                            {% if value.typeQuestion == '0to10' %} 
+                                                <div class="box-0to10 row">
+                                                       <div class="col-md-10 col-sm-10 col-xs-10">
+                                                        <input type="radio" value="0" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="1" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="2" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="3" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="4" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="5" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="6" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="7" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="8" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="9" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                        <input type="radio" value="10" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}   
+                        {% endif %}
+                        {% if loop.last %} 
+                            </div>     
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            
+            <div class="box-nav">
+                <input type="button" value="Passer à l'étape suivante" class="btn-active" id="btn-suivant"/>
+                <input type="submit" value="Valider" id="btn-valider" class="btn-inactive"/>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
