@@ -32,6 +32,31 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;*/
 
 class DefaultController extends Controller
 {
+
+    //Init la session
+    public function _init($request)
+    {
+        try {
+
+            $guidesTMP = '{"2444":"Sarah SCAGLIONE","1989":"Julien BALDY"}';
+            if(!$this->container->get('session')->isStarted())
+            {
+                $session = new Session();
+                $session->start();
+            }
+
+            $session = $this->get('session');
+            $session->set('currentDate', date("Y-m-d H:i:s"));
+            $session->set('guidesTMP', $guidesTMP);
+            $session->set('marque', $request->query->get('marque'));
+            $session->set('typeQds', $request->query->get('typeQds'));
+        } catch (Exception $e) {
+            return new Response("Error : " . $e->getMessage());
+        }
+
+    }
+
+
     /**
      * @Route("/", name="homepage")
      */
@@ -56,49 +81,41 @@ class DefaultController extends Controller
             ->add('QSD', TextType::class)
             ->getForm();*/
 
-        $this->init();   
-        $session = $this->get('session');
+        $this->_init($request);  
 
-        $patternRepo    = $this->getDoctrine()->getRepository(Qds2Pattern::class);
-        $stepRepo       = $this->getDoctrine()->getRepository(Qds2Step::class);
+        try {
+            $session        = $this->get('session');
+            $typeQds        = $session->get('typeQds');
+            $patternRepo    = $this->getDoctrine()->getRepository(Qds2Pattern::class);
+            $stepRepo       = $this->getDoctrine()->getRepository(Qds2Step::class);
+            var_dump($typeQds);
+            //Manque le concept de marque
+            $pattern        = $patternRepo->findOneBy(array('qdspattern' => $typeQds));
+            $arrayStep      = array();
+            $steps          = $stepRepo->findBy(array('idpattern' => $pattern->getIdpattern()));
 
-        //Manque le concept de marque
-        $pattern        = $patternRepo->findOneBy(array('qdspattern' => 'GIR'));
-        $arrayStep      = array();
-        $steps          = $stepRepo->findBy(array('idpattern' => $pattern->getIdpattern()));
+            $session->set('qdspattern', $pattern);
 
-        $session->set('qdspattern', $pattern);
+            //récupérer les step automatiquement suivant le type de questionnaire
+            foreach ($steps as $value) {
+                $step = $this->_getStep($pattern , $value->getSteporder());
+                array_push($arrayStep, $step);
+            }
 
-        //récupérer les step automatiquement suivant le type de questionnaire
-        foreach ($steps as $value) {
-            $step = $this->_getStep($pattern , $value->getSteporder());
-            array_push($arrayStep, $step);
+            /*$stepOne        = $this->_getStep($pattern , 1); //AVANT DEPART
+            $stepTwo        = $this->_getStep($pattern , 2); //PENDANT VOYAGE
+            $stepThree      = $this->_getStep($pattern , 3); //APRES VOYAGE
+            $stepFour       = $this->_getStep($pattern , 4); //REMERCIEMNET*/
+
+            //A changer par la suite, avoir un template-qds.html.twig
+            return $this->render('@App/qds/qds-nord.html.twig', 
+                array('arrayStep' => $arrayStep));
+        } catch (Exception $e) {
+            return new Response("Error : " . $e->getMessage());
         }
-
-        /*$stepOne        = $this->_getStep($pattern , 1); //AVANT DEPART
-        $stepTwo        = $this->_getStep($pattern , 2); //PENDANT VOYAGE
-        $stepThree      = $this->_getStep($pattern , 3); //APRES VOYAGE
-        $stepFour       = $this->_getStep($pattern , 4); //REMERCIEMNET*/
-
-        //A changer par la suite, avoir un template-qds.html.twig
-        return $this->render('@App/qds/qds-nord.html.twig', 
-            array('arrayStep' => $arrayStep));
+        
     }
 
-    //Init la session
-    public function init()
-    {
-        $guidesTMP = '{"2444":"Sarah SCAGLIONE","1989":"Julien BALDY"}';
-        if(!$this->container->get('session')->isStarted())
-        {
-            $session = new Session();
-            $session->start();
-        }
-
-        $session = $this->get('session');
-        $session->set('current_date', date("Y-m-d H:i:s"));
-        $session->set('guidesTMP', $guidesTMP);
-    }
 
     /*
     *   Function _getStep qui permet de récupérer sous form d'array les données d'un type de questionnaire (avant départ, pendant voyage, etc...)
@@ -109,138 +126,143 @@ class DefaultController extends Controller
     */
     public function _getStep($pattern , $stepOrder)
     {
-        $session = $this->get('session');
+        try {
+         
+            $session = $this->get('session');
 
-        //variable
-        $arrayBlockMultiple     = array();
-        $arrayIncrementResponse = array();
-        $arrayFinal             = array();
-        $arrayblockTmp          = array();
-        $arrayquestionTmp       = array();
-        $idPattern              = $pattern->getIdpattern();
-    
-        //repository    
-        $blockRepo              = $this->getDoctrine()->getRepository(Qds2Block::class);
-        $stepRepo               = $this->getDoctrine()->getRepository(Qds2Step::class);
-        $questionRepo           = $this->getDoctrine()->getRepository(Qds2Question::class);
+            //variable
+            $arrayBlockMultiple     = array();
+            $arrayIncrementResponse = array();
+            $arrayFinal             = array();
+            $arrayblockTmp          = array();
+            $arrayquestionTmp       = array();
+            $idPattern              = $pattern->getIdpattern();
+        
+            //repository    
+            $blockRepo              = $this->getDoctrine()->getRepository(Qds2Block::class);
+            $stepRepo               = $this->getDoctrine()->getRepository(Qds2Step::class);
+            $questionRepo           = $this->getDoctrine()->getRepository(Qds2Question::class);
 
-        //je récupé le step voulu
-        $step                   = $stepRepo->findOneBy(array('idpattern' => $idPattern, 'steporder' => $stepOrder));
-        $idStep                 = $step->getIdstep();
-        $titleStep              = $step->getSteptitle();
-        $guidesTMP              = json_decode($session->get('guidesTMP'));
+            //je récupé le step voulu
+            $step                   = $stepRepo->findOneBy(array('idpattern' => $idPattern, 'steporder' => $stepOrder));
+            $idStep                 = $step->getIdstep();
+            $titleStep              = $step->getSteptitle();
+            $guidesTMP              = json_decode($session->get('guidesTMP'));
 
-        //je garde le titre du step de coté
-        array_push($arrayFinal, $titleStep);
+            //je garde le titre du step de coté
+            array_push($arrayFinal, $titleStep);
 
-        //je récupe le block 
-        $blocks = $blockRepo->findBy(array('idstep' => $idStep), array('blockorder' => 'ASC'));
+            //je récupe le block 
+            $blocks = $blockRepo->findBy(array('idstep' => $idStep), array('blockorder' => 'ASC'));
 
-        //pour tous les blocks
-        foreach ($blocks as $block) 
-        {
-            $arrayBlock                     = array();
-            $idBlock                        = $block->getIdblock();
-            $blockTitle                     = $block->getBlocktitle();
-            $blockMultiple                  = $block->getBlockmultiple();
-            $blockOrder                     = $block->getBlockorder();
-
-            $arrayBlock['idBlock']          = $idBlock;
-            $arrayBlock['blockTitle']       = $blockTitle;
-            $arrayBlock['blockMultiple']    = $blockMultiple;
-            $arrayBlock['blockOrder']       = $blockOrder;
-
-            //je cherche les questions du bloc
-            $questions = $questionRepo->findBy(array('idblock' => $idBlock));
-
-            if($blockMultiple > 1)
+            //pour tous les blocks
+            foreach ($blocks as $block) 
             {
-                //condition pour block multiple, 7 est à remplacer en dynamic
-                if($idBlock == 7)
+                $arrayBlock                     = array();
+                $idBlock                        = $block->getIdblock();
+                $blockTitle                     = $block->getBlocktitle();
+                $blockMultiple                  = $block->getBlockmultiple();
+                $blockOrder                     = $block->getBlockorder();
+
+                $arrayBlock['idBlock']          = $idBlock;
+                $arrayBlock['blockTitle']       = $blockTitle;
+                $arrayBlock['blockMultiple']    = $blockMultiple;
+                $arrayBlock['blockOrder']       = $blockOrder;
+
+                //je cherche les questions du bloc
+                $questions = $questionRepo->findBy(array('idblock' => $idBlock));
+
+                if($blockMultiple > 1)
                 {
-                    $nb = 1;
+                    //condition pour block multiple, 7 est à remplacer en dynamic
+                    if($idBlock == 7)
+                    {
+                        $nb = 1;
 
-                    //pour chaque guide
-                    foreach ($guidesTMP as $key => $value) {
-                        $blockTitleTMP = $blockTitle;
-                        $blockTitleTMP = str_replace("[nomTourLeader]", $value, $blockTitle);
-                        $arrayBlock['blockTitle'] = $blockTitleTMP;
-                        $arrayBlock['guideID']    = $key;
+                        //pour chaque guide
+                        foreach ($guidesTMP as $key => $value) {
+                            $blockTitleTMP = $blockTitle;
+                            $blockTitleTMP = str_replace("[nomTourLeader]", $value, $blockTitle);
+                            $arrayBlock['blockTitle'] = $blockTitleTMP;
+                            $arrayBlock['guideID']    = $key;
 
-                        foreach ($questions as $question) {
+                            foreach ($questions as $question) {
 
-                            $arrayQuestion                          = array();
-                            $idQuestion                             = $question->getIdquestion();
-                            $headerQuestion                         = $question->getQuestionheader();
-                            $titleQuestion                          = $question->getQuestiontitle();
-                            $typeQuestion                           = $question->getQuestiontype();
-                            $choiceQuestion                         = $question->getQuestionchoice();
-                            $mandatoryQuestion                      = $question->getQuestionmandatory();
-                            $orderQuestion                          = $question->getQuestionorder();
-                            $visibleQuestion                        = $question->getQuestionvisible();
-                            $responseIDQuestion                     = $question->getResponseid();
+                                $arrayQuestion                          = array();
+                                $idQuestion                             = $question->getIdquestion();
+                                $headerQuestion                         = $question->getQuestionheader();
+                                $titleQuestion                          = $question->getQuestiontitle();
+                                $typeQuestion                           = $question->getQuestiontype();
+                                $choiceQuestion                         = $question->getQuestionchoice();
+                                $mandatoryQuestion                      = $question->getQuestionmandatory();
+                                $orderQuestion                          = $question->getQuestionorder();
+                                $visibleQuestion                        = $question->getQuestionvisible();
+                                $responseIDQuestion                     = $question->getResponseid();
 
-                            $arrayQuestion['idQuestion']            = $idQuestion;
-                            $arrayQuestion['headerQuestion']        = $headerQuestion;
-                            $arrayQuestion['titleQuestion']         = $titleQuestion;
-                            $arrayQuestion['typeQuestion']          = $typeQuestion;
-                            $arrayQuestion['choiceQuestion']        = $choiceQuestion;
-                            $arrayQuestion['mandatoryQuestion']     = $mandatoryQuestion;
-                            $arrayQuestion['orderQuestion']         = $orderQuestion;
-                            $arrayQuestion['visibleQuestion']       = $visibleQuestion;
+                                $arrayQuestion['idQuestion']            = $idQuestion;
+                                $arrayQuestion['headerQuestion']        = $headerQuestion;
+                                $arrayQuestion['titleQuestion']         = $titleQuestion;
+                                $arrayQuestion['typeQuestion']          = $typeQuestion;
+                                $arrayQuestion['choiceQuestion']        = $choiceQuestion;
+                                $arrayQuestion['mandatoryQuestion']     = $mandatoryQuestion;
+                                $arrayQuestion['orderQuestion']         = $orderQuestion;
+                                $arrayQuestion['visibleQuestion']       = $visibleQuestion;
 
-                            $splitId = explode('_', $responseIDQuestion);
-                            $idReponse = $splitId[0];
+                                $splitId = explode('_', $responseIDQuestion);
+                                $idReponse = $splitId[0];
 
-                            $arrayQuestion['responseIDQuestion']    = $idReponse . "_" . $nb;
-                            $arrayBlock[$idQuestion]    = $arrayQuestion;
+                                $arrayQuestion['responseIDQuestion']    = $idReponse . "_" . $nb;
+                                $arrayBlock[$idQuestion]    = $arrayQuestion;
+                            }
+                            $nb = $nb + 1;
+                            array_push($arrayFinal, $arrayBlock);
                         }
-                        $nb = $nb + 1;
-                        array_push($arrayFinal, $arrayBlock);
                     }
                 }
-            }
-            else
-            {
-                foreach ($questions as $question) {
-                    $arrayQuestion                          = array();
-                    $idQuestion                             = $question->getIdquestion();
-                    $headerQuestion                         = $question->getQuestionheader();
-                    $titleQuestion                          = $question->getQuestiontitle();
-                    $typeQuestion                           = $question->getQuestiontype();
-                    $choiceQuestion                         = $question->getQuestionchoice();
-                    $mandatoryQuestion                      = $question->getQuestionmandatory();
-                    $orderQuestion                          = $question->getQuestionorder();
-                    $visibleQuestion                        = $question->getQuestionvisible();
-                    $responseIDQuestion                     = $question->getResponseid();
+                else
+                {
+                    foreach ($questions as $question) {
+                        $arrayQuestion                          = array();
+                        $idQuestion                             = $question->getIdquestion();
+                        $headerQuestion                         = $question->getQuestionheader();
+                        $titleQuestion                          = $question->getQuestiontitle();
+                        $typeQuestion                           = $question->getQuestiontype();
+                        $choiceQuestion                         = $question->getQuestionchoice();
+                        $mandatoryQuestion                      = $question->getQuestionmandatory();
+                        $orderQuestion                          = $question->getQuestionorder();
+                        $visibleQuestion                        = $question->getQuestionvisible();
+                        $responseIDQuestion                     = $question->getResponseid();
 
-                    $arrayQuestion['idQuestion']            = $idQuestion;
-                    $arrayQuestion['headerQuestion']        = $headerQuestion;
-                    $arrayQuestion['titleQuestion']         = $titleQuestion;
-                    $arrayQuestion['typeQuestion']          = $typeQuestion;
-                    $arrayQuestion['choiceQuestion']        = $choiceQuestion;
-                    $arrayQuestion['mandatoryQuestion']     = $mandatoryQuestion;
-                    $arrayQuestion['orderQuestion']         = $orderQuestion;
-                    $arrayQuestion['visibleQuestion']       = $visibleQuestion;
-                    $arrayQuestion['responseIDQuestion']    = $responseIDQuestion;
+                        $arrayQuestion['idQuestion']            = $idQuestion;
+                        $arrayQuestion['headerQuestion']        = $headerQuestion;
+                        $arrayQuestion['titleQuestion']         = $titleQuestion;
+                        $arrayQuestion['typeQuestion']          = $typeQuestion;
+                        $arrayQuestion['choiceQuestion']        = $choiceQuestion;
+                        $arrayQuestion['mandatoryQuestion']     = $mandatoryQuestion;
+                        $arrayQuestion['orderQuestion']         = $orderQuestion;
+                        $arrayQuestion['visibleQuestion']       = $visibleQuestion;
+                        $arrayQuestion['responseIDQuestion']    = $responseIDQuestion;
 
-                    if($typeQuestion == "QCM2")
-                    {
-                        $arrayQuestion['choiceQuestion']    = json_decode($choiceQuestion, true);
+                        if($typeQuestion == "QCM2")
+                        {
+                            $arrayQuestion['choiceQuestion']    = json_decode($choiceQuestion, true);
+                        }
+                        if($typeQuestion == "LIST")
+                        {
+                            //lancer la requête 
+                        }
+
+                        $arrayBlock[$idQuestion] = $arrayQuestion;
                     }
-                    if($typeQuestion == "LIST")
-                    {
-                        //lancer la requête 
-                    }
 
-                    $arrayBlock[$idQuestion] = $arrayQuestion;
+                    //je push le bloc dans le tableau final
+                    array_push($arrayFinal, $arrayBlock);
                 }
-
-                //je push le bloc dans le tableau final
-                array_push($arrayFinal, $arrayBlock);
             }
+            return $arrayFinal;
+        } catch (Exception $e) {
+            return new Response("Error : " . $e->getMessage());
         }
-        return $arrayFinal;
     }
 
 
