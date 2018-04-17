@@ -133,3 +133,20 @@ h1 { font-size: 1.5em; margin: 10px; }
 .box-rating{
   display: flex;
 }
+
+.no-padding{
+  margin: 0 !important;
+  padding: 0 !important
+}
+
+.box-title-parent{
+  background-color: #01a2b4;
+  color: white;
+}
+
+.box-title-child{
+  text-align: center;
+  padding: 5px 0 5px 0;
+}
+
+

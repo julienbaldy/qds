@@ -39,6 +39,7 @@ class DefaultController extends Controller
         try {
 
             $guidesTMP = '{"2444":"Sarah SCAGLIONE","1989":"Julien BALDY"}';
+
             if(!$this->container->get('session')->isStarted())
             {
                 $session = new Session();
@@ -88,7 +89,7 @@ class DefaultController extends Controller
             $typeQds        = $session->get('typeQds');
             $patternRepo    = $this->getDoctrine()->getRepository(Qds2Pattern::class);
             $stepRepo       = $this->getDoctrine()->getRepository(Qds2Step::class);
-            var_dump($typeQds);
+            
             //Manque le concept de marque
             $pattern        = $patternRepo->findOneBy(array('qdspattern' => $typeQds));
             $arrayStep      = array();
