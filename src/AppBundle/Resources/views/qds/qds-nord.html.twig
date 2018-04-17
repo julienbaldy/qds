@@ -3,13 +3,13 @@
 {% block body %}
 <div class="container no-padding">
     <div class="row no-padding">
-        <div class="box-form col-md-12 no-padding">
-            <form class="col-md-12" id="form-qds" method="POST" action="{{path('saveForm')}}">
+        <div class="box-form no-padding col-md-12">
+            <form class="col-md-10 col-md-offset-2" id="form-qds" method="POST" action="{{path('saveForm')}}">
 
                 <div class="box-form-content col-md-12">
                     {% for key,val in arrayStep %}
-
-                        {% if loop.first %}
+ 
+                       {% if loop.first %}
                             {% set etat = 'active' %}     
                         {% else %} 
                             {% set etat = 'inactive' %}
@@ -32,11 +32,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="col-md-5 col-sm-5">
-                                                    {% if value.titleQuestion != "[N/A]" %}
-                                                        <label>{{ value.titleQuestion }} - ID Q {{ value.idQuestion }} - ID R {{ value.responseIDQuestion }}</label>
-                                                    {% else %}
-                                                        <label>ELSE {{ value.titleQuestion }} - {{ value.idQuestion }}</label>
-                                                    {% endif %}
+                                                    {{ value.titleQuestion }} 
                                                 </div>
 
                                                 {% if value.typeQuestion == 'STAR' %} 
