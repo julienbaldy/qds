@@ -1,8 +1,11 @@
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
 /*
 	PROTO RATING STAR
 */
 
-@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
 
 fieldset, label { margin: 0; padding: 0; }
 body{ margin: 20px; }
@@ -77,9 +80,14 @@ h1 { font-size: 1.5em; margin: 10px; }
 
 
 
-/*
-	CUSTOM CSS main file
-*/
+/**********************
+*
+*
+  CUSTOM CSS main file
+*
+*
+**********************/
+
 
  #btn-suivant, #btn-valider{
 	margin: auto;	
@@ -139,6 +147,17 @@ h1 { font-size: 1.5em; margin: 10px; }
   padding: 0 !important
 }
 
+
+
+
+/**********************
+*
+*
+  CUSTOM CSS 66 ° Nord
+*
+*
+**********************/
+
 .box-title-parent{
   background-color: #01a2b4;
   color: white;
@@ -149,4 +168,11 @@ h1 { font-size: 1.5em; margin: 10px; }
   padding: 5px 0 5px 0;
 }
 
+.box-intro{
+  padding-top: 10px;
+}
+
+.box-intro p{
+  text-align: center;
+}
 
