@@ -2,10 +2,34 @@ $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 @import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
 
-/*
-	PROTO RATING STAR
-*/
 
+/**********************
+*
+*
+        VARIABLES
+* 
+*
+**********************/
+/* (gestion multimarque via sass)  */
+
+/* MARQUE : 66 NORD  */
+
+$color-star-full: #FFED85;
+$color-star-hover: #f6c82c;
+$color-background-yellow : #f6c82c;
+$color-background-blue : #0fa1b8;
+
+
+
+
+
+/**********************
+*
+*
+  PROTO RATING STAR
+*
+*
+**********************/
 
 fieldset, label { margin: 0; padding: 0; }
 body{ margin: 20px; }
@@ -37,29 +61,30 @@ h1 { font-size: 1.5em; margin: 10px; }
 
 .rating > input:checked ~ label, /* affiche letoile d or quand clicker */
 .rating:not(:checked) > label:hover, /* hover la current etoile */
-.rating:not(:checked) > label:hover ~ label { color: #f6c82c;  } /* hover letoile precedente*/
+.rating:not(:checked) > label:hover ~ label { color: $color-star-hover;  } /* hover letoile precedente*/
 
 .rating > input:checked + label:hover, /* hover la current etoile quand le rating change */
 .rating > input:checked ~ label:hover,
 .rating > label:hover ~ input:checked ~ label, /* light la selection courrante */
-.rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
+.rating > input:checked ~ label:hover ~ label { color: $color-star-full;  } 
 
 #messageSF > span:not(.first-sf){
-      font-size: 1.15em;
+    font-size: 1.15em;
     font-weight: 700;
     color: white;
     float: left;
-    display: none; 
+    display: none;
     width: 234px;
     text-align: center;
     height: 28px;
     background-color: #f6c82c;
-    margin-top: 18px;
+    margin-top: 12px;
     margin-left: 22px;
+    padding-top: 2.5px;
 }
 
 .first-sf{
-  background-color: #0fa1b8 !important;
+  background-color: $color-background-blue !important;
   font-size: 1.0em;
   padding-top: 1.4px;
   font-weight: 700;
@@ -68,8 +93,9 @@ h1 { font-size: 1.5em; margin: 10px; }
   width: 234px;
   text-align: center;
   height: 28px;
-  margin-top: 18px;
+  margin-top: 12px;
   margin-left: 22px;
+  padding-top: 3.5px;
 }
 
 
