@@ -29,12 +29,13 @@
                                 {% for key,value in val %}
                                     {% if value is iterable %}
                                         <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="col-md-4 col-sm-4">
-                                                    {% if value.titleQuestion != "[N/A]" %}
+                                            <div class="col-md-12 box-global">
+
+                                                {% if value.titleQuestion != "[N/A]" %}
+                                                    <div class="col-md-4 col-sm-4">
                                                         <label>{{ value.titleQuestion }} </label>
-                                                    {% endif %}
-                                                </div>
+                                                    </div>
+                                                {% endif %}
 
                                                 {% if value.typeQuestion == 'STAR' %} 
                                                     <div class="box-rating col-md-6 col-sm-6">
@@ -57,7 +58,7 @@
                                                 {% endif %}
 
                                                 {% if value.typeQuestion == 'TEXT' %} 
-                                                    <div class="box-rating col-md-12 col-sm-12">
+                                                    <div class="box-text col-md-12 col-sm-12">
                                                         <textarea class="question-text" placeholder="Votre avis ici..." name="{{ value.responseIDQuestion }}___text" data-idresponse="{{ value.responseIDQuestion }}" ></textarea>
                                                     </div>
                                                 {% endif %}
@@ -66,7 +67,7 @@
                                                 {% if value.typeQuestion == 'QCM2' %} 
                                                     <div class="box-qcm row">
                                                         {% for key,qcm in value.choiceQuestion %}
-                                                           <div class="col-md-6 col-sm-6 col-xs-6">{{ qcm }}<input type="radio" name="{{ value.responseIDQuestion }}___qcm" data-idresponse="{{ value.responseIDQuestion }}"/></div>
+                                                           <div class="col-md-6 col-sm-6 col-xs-6 input-qcm"><input type="radio" name="{{ value.responseIDQuestion }}___qcm" data-idresponse="{{ value.responseIDQuestion }}"/> {{ qcm }} </div>
                                                         {% endfor %} 
                                                     </div>
                                                 {% endif %}
@@ -109,10 +110,11 @@
                         {% endfor %}
                     {% endfor %}
                 </div>
-                
-                <div class="box-nav">
-                    <input type="button" value="Passer à l'étape suivante" class="btn-active" id="btn-suivant"/>
-                    <input type="submit" value="Valider" id="btn-valider" class="btn-inactive"/>
+                <div class="row">
+                    <div class="box-nav">
+                        <input type="button" value="Passer à l'étape suivante" class="btn-active" id="btn-suivant"/>
+                        <input type="submit" value="Valider" id="btn-valider" class="btn-inactive"/>
+                    </div>
                 </div>
             </form>
         </div>

@@ -118,8 +118,7 @@ h1 { font-size: 1.5em; margin: 10px; }
 *
 **********************/
 
-
- #btn-suivant, #btn-valider{
+#btn-suivant, #btn-valider{
 	margin: auto;	
 }
 
@@ -129,14 +128,6 @@ h1 { font-size: 1.5em; margin: 10px; }
 
 .box-form-active{
 	display:block;
-}
-
-.box-nav{
-	/*margin-top: 15px;*/
-}
-
-.btn-valider{
-
 }
 
 .btn-active{
@@ -150,6 +141,7 @@ h1 { font-size: 1.5em; margin: 10px; }
 .box-rating > .rating > label{
 	font-size: 11.2px;
 }
+
 .box-rating{
 	width: 517px;
   min-width: 460px;
@@ -183,6 +175,20 @@ h1 { font-size: 1.5em; margin: 10px; }
 
 .no-margin{
   margin: 0 !important;
+}
+
+.box-global{
+}
+
+.box-qcm{
+  padding-left: 8%;
+  margin-bottom: 25px;
+}
+
+.input-qcm{
+  >input{
+    margin-right: 5px;
+  }
 }
 
 
