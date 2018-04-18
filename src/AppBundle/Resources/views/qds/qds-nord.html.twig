@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container no-padding">
-    <div class="row no-padding">
-        <div class="box-form no-padding col-md-12">
+<div class="container ">
+    <div class="row ">
+        <div class="box-form  col-md-12">
             <form class="col-md-10 col-md-offset-2" id="form-qds" method="POST" action="{{path('saveForm')}}">
 
                 <div class="box-form-content col-md-12">
@@ -19,7 +19,6 @@
                         </br>
                             {% if loop.first %} 
                                 <div class="box-form-{{etat}}">
-                                <h2>{{ val }}</h2>  
                                 {% set nb = 1 %}      
                             {% else %}    
                                 <h3>{{ val.blockTitle }}</h3>
@@ -32,7 +31,9 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="col-md-5 col-sm-5">
-                                                    {{ value.titleQuestion }} 
+                                                    {% if value.titleQuestion != "[N/A]" %}
+                                                        <label>{{ value.titleQuestion }} </label>
+                                                    {% endif %}
                                                 </div>
 
                                                 {% if value.typeQuestion == 'STAR' %} 

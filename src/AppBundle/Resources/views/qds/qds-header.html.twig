@@ -1,22 +1,44 @@
 
 {% block header %}
-    <div class="container-fluid no-padding">
-      <div class="row no-padding">
-        <div class="col-12 no-padding">
+    <div class="container-fluid ">
+      <div class="row ">
+        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 no-padding-margin">
           <img src="{{ asset('img/voyage-spitzberg-kayak-icebergs.JPG') }}" alt="" width="100%" class="img-header" />
         </div>
-        <div class="col-12 no-padding box-title-parent">
+        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 box-title-parent">
         	<div class="box-title-child">
         		<h1>QUESTIONNAIRE DE SATISFACTION</h1>
         	</div>
         </div>
-        <div class="col-12">
-        	<div class="box-intro">
-        		<p>Bonjour Julien BALDY [pas encore twiggé]</p>
-        		<p>Vous venez de participer à un voyage organisé par 66°Nord, votre avis nous intéresse !</p>
-        		<p>Dans le souci de mieux répondre à vos attentes et de vous proposer des voyages de qualité, nous vous remercions par avance de bien vouloir prendre quelques instants pour compléter le questionnaire ci-après</p>
-        	</div>
+
+        <div class="row no-padding-margin">
+	        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12">
+	        	<div class="box-intro col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1">
+	        		<p>Bonjour Julien BALDY [pas encore twiggé]</p>
+	        		<p>Vous venez de participer à un voyage organisé par 66°Nord, votre avis nous intéresse !</p>
+	        		<p>Dans le souci de mieux répondre à vos attentes et de vous proposer des voyages de qualité, nous vous remercions par avance de bien vouloir prendre quelques instants pour compléter le questionnaire ci-après</p>
+	        	</div>
+	        </div>
         </div>
+
+        <div class="row no-padding-margin">
+	        <div class="col-md-12 col-sm-12 col-xs-12 col-lg-12 no-padding-margin">
+        		<ul class="col-md-12 col-sm-12 col-xs-12 col-lg-12 no-padding" id="menu-step">
+    				{% set number = 0 %}
+	                {% for key,val in arrayStep %}
+	        			{% if not loop.last %} 
+	        				{% set title = val[0]|split(' : ') %}
+	        				{% set number = number + 1 %}
+	        				{% if loop.first %} 
+	        					<li class="col-md-4 col-sm-4 col-xs-4 col-lg-4 active-menu"><span>{{ title[1] }}</span></li>
+	                		{% else %}
+	        					<li class="col-md-4 col-sm-4 col-xs-4 col-lg-4"><span>{{ title[1] }}</span></li>
+                			{% endif %}
+	                	{% endif %}
+	                {% endfor %}
+            	</ul>
+	        </div>
+	    </div>
       </div>
     </div>
 {% endblock %}
