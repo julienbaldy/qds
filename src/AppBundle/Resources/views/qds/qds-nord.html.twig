@@ -32,9 +32,16 @@
                                             <div class="col-md-12 box-global">
 
                                                 {% if value.titleQuestion != "[N/A]" %}
-                                                    <div class="col-md-4 col-sm-4">
-                                                        <label>{{ value.titleQuestion }} </label>
-                                                    </div>
+                                                    {% if value.typeQuestion == "TEXT" %}
+                                                        <div class="col-md-10 col-sm-10 col-xs-10">
+                                                            {{ value.titleQuestion }}
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if value.typeQuestion != "TEXT" %}
+                                                        <div class="col-md-5 col-sm-6 col-xc-6">
+                                                            <label>{{ value.titleQuestion }}</label>
+                                                        </div>
+                                                    {% endif %}
                                                 {% endif %}
 
                                                 {% if value.typeQuestion == 'STAR' %} 
@@ -83,18 +90,11 @@
 
                                                 {% if value.typeQuestion == '0to10' %} 
                                                     <div class="box-0to10 row">
-                                                           <div class="col-md-10 col-sm-10 col-xs-10">
-                                                            <input type="radio" value="0" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
-                                                            <input type="radio" value="1" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
-                                                            <input type="radio" value="2" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
-                                                            <input type="radio" value="3" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
-                                                            <input type="radio" value="4" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
-                                                            <input type="radio" value="5" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
-                                                            <input type="radio" value="6" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
-                                                            <input type="radio" value="7" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
-                                                            <input type="radio" value="8" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
-                                                            <input type="radio" value="9" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
-                                                            <input type="radio" value="10" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/>
+
+                                                           <div class="col-md-12 col-sm-12 col-xs-12 ">
+                                                            {% for i in 0..10 %}
+                                                                <div class="col-md-1 col-sm-1 col-xs-1"><input type="radio" value="{{ i }}" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/></div>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                 {% endif %}
@@ -112,8 +112,8 @@
                 </div>
                 <div class="row">
                     <div class="box-nav">
-                        <input type="button" value="Passer à l'étape suivante" class="btn-active" id="btn-suivant"/>
-                        <input type="submit" value="Valider" id="btn-valider" class="btn-inactive"/>
+                        <input type="button" value="Passer à l'étape suivante" class="btn btn-primary btn-sm btn-active" id="btn-suivant"/>
+                        <input type="submit" value="Valider" id="btn-valider" class="btn btn-primary btn-sm btn-inactive"/>
                     </div>
                 </div>
             </form>

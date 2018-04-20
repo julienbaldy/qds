@@ -24,6 +24,8 @@ $color-background-blue : #0fa1b8;
 $color-box-title-parent : #01a2b4;
 $color-menu-active : #04707c;
 $color-number-step-menu : #b8dde3;
+$color-note-0to10-orange : #ff9219;
+$color-note-0to10-vert : #009446;
 
 
 
@@ -119,7 +121,11 @@ h1 { font-size: 1.5em; margin: 10px; }
 **********************/
 
 #btn-suivant, #btn-valider{
-	margin: auto;	
+	margin: auto;	    
+  margin-bottom: 50px;
+  font-size: 15px;
+  background-color: $color-background-blue; 
+  border-color: $color-background-blue;
 }
 
 .box-form-inactive{
@@ -143,7 +149,7 @@ h1 { font-size: 1.5em; margin: 10px; }
 }
 
 .box-rating{
-	width: 517px;
+	width: 483px;
   min-width: 460px;
 }
 
@@ -186,11 +192,44 @@ h1 { font-size: 1.5em; margin: 10px; }
 }
 
 .input-qcm{
+
   >input{
     margin-right: 5px;
   }
 }
 
+.box-0to10{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  >div{
+    display: inline-flex;
+
+    >div{
+      text-align: center;
+      height: 40px;
+
+      &:nth-child(-n+7){
+        background-color: $color-note-0to10-orange;
+      }
+
+      &:nth-child(+n+8){
+        background-color: $color-background-yellow;
+      }
+
+      &:nth-child(+n+10){
+        background-color: $color-note-0to10-vert;
+      }
+
+      >input{
+        margin-top: 13px; 
+      }
+    }
+
+    >div:first-child{
+      margin-left: 5%;
+    }
+  }
+}
 
 
 
@@ -201,6 +240,13 @@ h1 { font-size: 1.5em; margin: 10px; }
 *
 *
 **********************/
+#logo-66-nord{
+  position: absolute;
+  z-index: 1;
+  width: 20%;
+  top: 11%;
+  left: 41%;
+} 
 
 .box-title-parent{
   background-color: $color-box-title-parent;
@@ -213,7 +259,6 @@ h1 { font-size: 1.5em; margin: 10px; }
       font-size: 2.7em;
     }
   }
-
 }
 
 .box-intro{
@@ -348,10 +393,6 @@ h1 { font-size: 1.5em; margin: 10px; }
   }
 
 }
-
-
-
-
 
 
 /****************************
