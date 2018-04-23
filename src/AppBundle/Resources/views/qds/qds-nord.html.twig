@@ -74,7 +74,7 @@
                                                 {% if value.typeQuestion == 'QCM2' %} 
                                                     <div class="box-qcm row">
                                                         {% for key,qcm in value.choiceQuestion %}
-                                                           <div class="col-md-6 col-sm-6 col-xs-6 input-qcm"><input type="radio" name="{{ value.responseIDQuestion }}___qcm" data-idresponse="{{ value.responseIDQuestion }}"/> {{ qcm }} </div>
+                                                           <div class="col-md-6 col-sm-6 col-xs-6 input-qcm"><input type="checkbox" class="qcm-choices" name="{{ value.responseIDQuestion }}___qcm" data-idresponse="{{ value.responseIDQuestion }}"/> {{ qcm }} </div>
                                                         {% endfor %} 
                                                     </div>
                                                 {% endif %}
@@ -82,8 +82,8 @@
                                                 {% if value.typeQuestion == 'YESNO' %} 
                                                     <div class="box-yesno row">
                                                            <div class="col-md-6 col-sm-6 col-xs-6">
-                                                            <li>Oui <input type="radio" value="1" name="{{ value.responseIDQuestion }}___yesno" data-idresponse="{{ value.responseIDQuestion }}"/></li>
-                                                            <li>Non <input type="radio" value="0" name="{{ value.responseIDQuestion }}___yesno-" data-idresponse="{{ value.responseIDQuestion }}"/></li>
+                                                            <li><input type="radio" value="1" name="{{ value.responseIDQuestion }}___yesno" data-idresponse="{{ value.responseIDQuestion }}"/> Oui </li>
+                                                            <li><input type="radio" value="0" name="{{ value.responseIDQuestion }}___yesno-" data-idresponse="{{ value.responseIDQuestion }}"/> Non </li>
                                                         </div>
                                                     </div>
                                                 {% endif %}
@@ -93,7 +93,7 @@
 
                                                            <div class="col-md-12 col-sm-12 col-xs-12 ">
                                                             {% for i in 0..10 %}
-                                                                <div class="col-md-1 col-sm-1 col-xs-1"><input type="radio" value="{{ i }}" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/></div>
+                                                                <div class="col-md-1 col-sm-1 col-xs-1 content-0t10"><input type="radio" value="{{ i }}" name="{{ value.responseIDQuestion }}___0to10" data-idresponse="{{ value.responseIDQuestion }}"/></div>
                                                             {% endfor %}
                                                         </div>
                                                     </div>

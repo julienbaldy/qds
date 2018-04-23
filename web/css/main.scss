@@ -1,6 +1,6 @@
+
 $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
-@import '~bootstrap-sass/assets/stylesheets/_bootstrap.scss';
-@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
 
 body{
   margin: 0 !important;
@@ -231,6 +231,24 @@ h1 { font-size: 1.5em; margin: 10px; }
     }
   }
 }
+
+.box-yesno{
+  >div{
+    display: flex;  
+
+    >li{
+      list-style-type: none;
+      padding: 7px;
+    }
+  }
+}
+
+@for $i from 0 through 10 {
+    .content-0t10:nth-child(#{$i}):before {
+        content: $i;
+    }
+}
+
 
 
 
